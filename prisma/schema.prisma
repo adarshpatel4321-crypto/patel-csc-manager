@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Service {
+  id          String        @id @default(cuid())
+  name        String
+  category    String
+  charge      Float         @default(0)
+  active      Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  transactions Transaction[]
+
+  @@index([category])
+  @@index([active])
+}
+
+model Transaction {
+  id                String   @id @default(cuid())
+  serviceId         String?
+  transactionAmount Float    @default(0)
+  serviceCharge     Float    @default(0)
+  paymentMethod     String
+  note              String?
+idempotencyKey      String?   @unique
+  createdAt         DateTime @default(now())
+
+  service Service? @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+
+  @@index([serviceId])
+  @@index([createdAt])
+  @@index([paymentMethod])
+}
+
+model Expense {
+  id             String   @id @default(cuid())
+  category       String
+  amount         Float
+  paymentMethod  String
+  note           String?
+  idempotencyKey String?  @unique
+  createdAt      DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([category])
+}
+
+model Reminder {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  remindAt    DateTime
+  repeat      String?
+  completed   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([remindAt])
+  @@index([completed])
+}
+
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
