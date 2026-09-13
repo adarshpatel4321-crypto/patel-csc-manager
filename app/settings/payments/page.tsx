@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import type { Variants } from "framer-motion";
 import {
   ArrowLeft,
   Banknote,
@@ -74,12 +75,12 @@ const pageVariants = {
     y: 0,
     transition: {
       duration: 0.45,
-      ease: "easeOut",
+      ease: "easeOut" as const,
     },
   },
 };
 
-const cardVariants = {
+const cardVariants: Variants = {
   hidden: {
     opacity: 0,
     y: 18,
@@ -90,7 +91,7 @@ const cardVariants = {
     transition: {
       delay: 0.12 + index * 0.07,
       duration: 0.42,
-      ease: "easeOut",
+      ease: "easeOut" as const,
     },
   }),
 };
@@ -470,7 +471,7 @@ export default function PaymentMethodsPage() {
               }}
               transition={{
                 duration: 0.5,
-                ease: "easeOut",
+                ease: "easeOut" as const,
               }}
               className="h-full rounded-full bg-gradient-to-r from-blue-600 to-blue-400"
             />
